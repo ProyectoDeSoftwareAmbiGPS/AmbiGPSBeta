@@ -16,8 +16,10 @@ public class UsuarioService {
     }
 
     public Usuario crearUsuario(Usuario usuario) {
+
         if (usuarioRepository.findByCorreo(usuario.getCorreo()).isPresent()) {
-            throw new IllegalArgumentException("El correo ya está registrado");
+            throw new RuntimeException(
+                    "Ya existe un usuario con ese correo");
         }
 
         return usuarioRepository.save(usuario);
@@ -30,7 +32,8 @@ public class UsuarioService {
     public Usuario buscarUsuarioPorId(Long id) {
         return usuarioRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Usuario no encontrado"));
+                        new RuntimeException(
+                                "Usuario no encontrado con id: " + id));
     }
 
     public Usuario actualizarUsuario(Long id, Usuario datos) {

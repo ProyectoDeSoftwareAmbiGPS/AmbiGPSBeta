@@ -1,16 +1,10 @@
 package com.example.seven.AmbiGPSBeta.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "recicladores")
@@ -18,32 +12,26 @@ public class Reciclador {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_reciclador")
     private Long idReciclador;
 
-    @NotBlank(message = "El nombre es obligatorio")
-    @Size(max = 100, message = "El nombre no puede superar los 100 caracteres")
-    @Column(nullable = false)
+    @NotBlank
     private String nombre;
 
-    @NotBlank(message = "El teléfono es obligatorio")
-    @Size(max = 20, message = "El teléfono no puede superar los 20 caracteres")
-    @Column(nullable = false)
+    @NotBlank
     private String telefono;
 
-    @NotBlank(message = "El departamento es obligatorio")
-    @Size(max = 100, message = "El departamento no puede superar los 100 caracteres")
-    @Column(nullable = false)
+    @NotBlank
     private String departamento;
 
-    @NotBlank(message = "El municipio es obligatorio")
-    @Size(max = 100, message = "El municipio no puede superar los 100 caracteres")
-    @Column(nullable = false)
+    @NotBlank
     private String municipio;
 
-    @NotNull(message = "El estado es obligatorio")
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private EstadoReciclador estado;
+    @NotBlank
+    private String estado;
+
+    @OneToMany(mappedBy = "reciclador")
+    private List<SolicitudRecoleccion> solicitudes = new ArrayList<>();
 
     public Reciclador() {
     }
@@ -88,11 +76,19 @@ public class Reciclador {
         this.municipio = municipio;
     }
 
-    public EstadoReciclador getEstado() {
+    public String getEstado() {
         return estado;
     }
 
-    public void setEstado(EstadoReciclador estado) {
+    public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public List<SolicitudRecoleccion> getSolicitudes() {
+        return solicitudes;
+    }
+
+    public void setSolicitudes(List<SolicitudRecoleccion> solicitudes) {
+        this.solicitudes = solicitudes;
     }
 }

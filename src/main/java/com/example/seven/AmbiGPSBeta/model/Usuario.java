@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "usuarios")
@@ -13,34 +15,42 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_usuario")
     private Long idUsuario;
 
     @NotBlank(message = "El nombre de usuario es obligatorio")
-    @Size(max = 100, message = "El nombre no puede superar los 100 caracteres")
+    @Size(max = 100)
+    @Column(name = "nombre_usuario", nullable = false)
     private String nombreUsuario;
 
     @NotBlank(message = "El correo es obligatorio")
     @Email(message = "El correo debe tener un formato válido")
-    @Size(max = 150, message = "El correo no puede superar los 150 caracteres")
+    @Size(max = 150)
     @Column(unique = true, nullable = false)
     private String correo;
 
     @NotBlank(message = "El teléfono es obligatorio")
-    @Size(max = 20, message = "El teléfono no puede superar los 20 caracteres")
+    @Size(max = 20)
     private String telefono;
 
     private LocalDate fechaNacimiento;
 
-    @NotBlank(message = "El departamento es obligatorio")
+    @NotBlank
     private String departamento;
 
-    @NotBlank(message = "El municipio es obligatorio")
+    @NotBlank
     private String municipio;
 
-    @NotBlank(message = "La dirección es obligatoria")
+    @NotBlank
     private String direccion;
 
     private String gpsUbicacion;
+
+    @OneToMany(mappedBy = "usuario")
+    private List<SolicitudRecoleccion> solicitudes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "usuario")
+    private List<Historial> historial = new ArrayList<>();
 
     public Usuario() {
     }
@@ -115,5 +125,21 @@ public class Usuario {
 
     public void setGpsUbicacion(String gpsUbicacion) {
         this.gpsUbicacion = gpsUbicacion;
+    }
+
+    public List<SolicitudRecoleccion> getSolicitudes() {
+        return solicitudes;
+    }
+
+    public void setSolicitudes(List<SolicitudRecoleccion> solicitudes) {
+        this.solicitudes = solicitudes;
+    }
+
+    public List<Historial> getHistorial() {
+        return historial;
+    }
+
+    public void setHistorial(List<Historial> historial) {
+        this.historial = historial;
     }
 }

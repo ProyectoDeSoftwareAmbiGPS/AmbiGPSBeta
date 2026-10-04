@@ -1,7 +1,6 @@
 package com.example.seven.AmbiGPSBeta.service;
 
 import com.example.seven.AmbiGPSBeta.model.Reciclaje;
-import com.example.seven.AmbiGPSBeta.model.TipoMaterial;
 import com.example.seven.AmbiGPSBeta.repository.ReciclajeRepository;
 import org.springframework.stereotype.Service;
 
@@ -27,14 +26,19 @@ public class ReciclajeService {
     public Reciclaje buscarPorId(Long id) {
         return reciclajeRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Reciclaje no encontrado con id: " + id));
+                        new RuntimeException(
+                                "Reciclaje no encontrado con id: " + id
+                        )
+                );
     }
 
-    public List<Reciclaje> buscarPorTipo(TipoMaterial tipo) {
+    public List<Reciclaje> buscarPorTipo(String tipo) {
         return reciclajeRepository.findByTipo(tipo);
     }
 
-    public Reciclaje actualizarReciclaje(Long id, Reciclaje datos) {
+    public Reciclaje actualizarReciclaje(
+            Long id,
+            Reciclaje datos) {
 
         Reciclaje reciclaje = buscarPorId(id);
 
