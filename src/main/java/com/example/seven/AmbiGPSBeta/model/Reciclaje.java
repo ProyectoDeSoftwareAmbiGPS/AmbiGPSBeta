@@ -2,9 +2,7 @@ package com.example.seven.AmbiGPSBeta.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "reciclajes")
@@ -12,21 +10,20 @@ public class Reciclaje {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_reciclaje")
     private Long idReciclaje;
 
-    @NotNull(message = "El tipo de material es obligatorio")
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private TipoMaterial tipo;
+    @NotBlank
+    private String tipo;
 
-    @NotNull(message = "El peso es obligatorio")
-    @Positive(message = "El peso debe ser mayor que cero")
-    @Column(nullable = false)
+    @Positive
     private Double peso;
 
-    @NotBlank(message = "La descripción es obligatoria")
-    @Size(max = 500, message = "La descripción no puede superar los 500 caracteres")
     private String descripcion;
+
+    @ManyToOne
+    @JoinColumn(name = "id_solicitud", nullable = false)
+    private SolicitudRecoleccion solicitud;
 
     public Reciclaje() {
     }
@@ -39,11 +36,11 @@ public class Reciclaje {
         this.idReciclaje = idReciclaje;
     }
 
-    public TipoMaterial getTipo() {
+    public String getTipo() {
         return tipo;
     }
 
-    public void setTipo(TipoMaterial tipo) {
+    public void setTipo(String tipo) {
         this.tipo = tipo;
     }
 
@@ -61,5 +58,13 @@ public class Reciclaje {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public SolicitudRecoleccion getSolicitud() {
+        return solicitud;
+    }
+
+    public void setSolicitud(SolicitudRecoleccion solicitud) {
+        this.solicitud = solicitud;
     }
 }

@@ -1,7 +1,6 @@
 package com.example.seven.AmbiGPSBeta.controller;
 
 import com.example.seven.AmbiGPSBeta.model.Reciclaje;
-import com.example.seven.AmbiGPSBeta.model.TipoMaterial;
 import com.example.seven.AmbiGPSBeta.service.ReciclajeService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -16,58 +15,56 @@ public class ReciclajeController {
 
     private final ReciclajeService reciclajeService;
 
-    public ReciclajeController(ReciclajeService reciclajeService) {
+    public ReciclajeController(
+            ReciclajeService reciclajeService) {
+
         this.reciclajeService = reciclajeService;
     }
 
     @PostMapping
-    public ResponseEntity<Reciclaje> crearReciclaje(
+    public ResponseEntity<Reciclaje> crear(
             @Valid @RequestBody Reciclaje reciclaje) {
-
-        Reciclaje nuevoReciclaje =
-                reciclajeService.crearReciclaje(reciclaje);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(nuevoReciclaje);
+                .body(reciclajeService.crearReciclaje(reciclaje));
     }
 
     @GetMapping
-    public ResponseEntity<List<Reciclaje>> listarReciclajes(
-            @RequestParam(required = false) TipoMaterial tipo) {
-
-        if (tipo != null) {
-            return ResponseEntity.ok(
-                    reciclajeService.buscarPorTipo(tipo)
-            );
-        }
+    public ResponseEntity<List<Reciclaje>> listar() {
 
         return ResponseEntity.ok(
-                reciclajeService.listarReciclajes()
-        );
+                reciclajeService.listarReciclajes());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Reciclaje> buscarPorId(
+    public ResponseEntity<Reciclaje> buscar(
             @PathVariable Long id) {
 
         return ResponseEntity.ok(
-                reciclajeService.buscarPorId(id)
-        );
+                reciclajeService.buscarPorId(id));
+    }
+
+    @GetMapping("/tipo/{tipo}")
+    public ResponseEntity<List<Reciclaje>> buscarPorTipo(
+            @PathVariable String tipo) {
+
+        return ResponseEntity.ok(
+                reciclajeService.buscarPorTipo(tipo));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Reciclaje> actualizarReciclaje(
+    public ResponseEntity<Reciclaje> actualizar(
             @PathVariable Long id,
             @Valid @RequestBody Reciclaje reciclaje) {
 
         return ResponseEntity.ok(
-                reciclajeService.actualizarReciclaje(id, reciclaje)
-        );
+                reciclajeService.actualizarReciclaje(
+                        id, reciclaje));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarReciclaje(
+    public ResponseEntity<Void> eliminar(
             @PathVariable Long id) {
 
         reciclajeService.eliminarReciclaje(id);

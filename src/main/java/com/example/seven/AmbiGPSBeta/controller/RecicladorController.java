@@ -1,6 +1,5 @@
 package com.example.seven.AmbiGPSBeta.controller;
 
-import com.example.seven.AmbiGPSBeta.model.EstadoReciclador;
 import com.example.seven.AmbiGPSBeta.model.Reciclador;
 import com.example.seven.AmbiGPSBeta.service.RecicladorService;
 import jakarta.validation.Valid;
@@ -16,79 +15,48 @@ public class RecicladorController {
 
     private final RecicladorService recicladorService;
 
-    public RecicladorController(RecicladorService recicladorService) {
+    public RecicladorController(
+            RecicladorService recicladorService) {
+
         this.recicladorService = recicladorService;
     }
 
-    
     @PostMapping
-    public ResponseEntity<Reciclador> crearReciclador(
+    public ResponseEntity<Reciclador> crear(
             @Valid @RequestBody Reciclador reciclador) {
-
-        Reciclador nuevoReciclador =
-                recicladorService.crearReciclador(reciclador);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(nuevoReciclador);
+                .body(recicladorService.crearReciclador(reciclador));
     }
 
-    
     @GetMapping
-    public ResponseEntity<List<Reciclador>> listarRecicladores(
-            @RequestParam(required = false) String departamento,
-            @RequestParam(required = false) String municipio,
-            @RequestParam(required = false) EstadoReciclador estado) {
-
-        if (departamento != null && municipio != null) {
-
-            return ResponseEntity.ok(
-                    recicladorService.buscarPorUbicacion(
-                            departamento,
-                            municipio
-                    )
-            );
-        }
-
-        if (estado != null) {
-
-            return ResponseEntity.ok(
-                    recicladorService.buscarPorEstado(estado)
-            );
-        }
+    public ResponseEntity<List<Reciclador>> listar() {
 
         return ResponseEntity.ok(
-                recicladorService.listarRecicladores()
-        );
+                recicladorService.listarRecicladores());
     }
 
-    
     @GetMapping("/{id}")
-    public ResponseEntity<Reciclador> buscarPorId(
+    public ResponseEntity<Reciclador> buscar(
             @PathVariable Long id) {
 
         return ResponseEntity.ok(
-                recicladorService.buscarPorId(id)
-        );
+                recicladorService.buscarPorId(id));
     }
 
-   
     @PutMapping("/{id}")
-    public ResponseEntity<Reciclador> actualizarReciclador(
+    public ResponseEntity<Reciclador> actualizar(
             @PathVariable Long id,
             @Valid @RequestBody Reciclador reciclador) {
 
         return ResponseEntity.ok(
                 recicladorService.actualizarReciclador(
-                        id,
-                        reciclador
-                )
-        );
+                        id, reciclador));
     }
 
-    
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarReciclador(
+    public ResponseEntity<Void> eliminar(
             @PathVariable Long id) {
 
         recicladorService.eliminarReciclador(id);
