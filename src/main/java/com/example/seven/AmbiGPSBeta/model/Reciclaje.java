@@ -1,8 +1,10 @@
 package com.example.seven.AmbiGPSBeta.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.DecimalMin;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "reciclajes")
@@ -13,19 +15,24 @@ public class Reciclaje {
     @Column(name = "id_reciclaje")
     private Long idReciclaje;
 
-    @NotBlank
-    private String tipo;
-
-    @Positive
-    private Double peso;
-
-    private String descripcion;
-
-    @ManyToOne
+    @NotNull(message = "La solicitud es obligatoria")
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_solicitud", nullable = false)
     private SolicitudRecoleccion solicitud;
 
+    @NotNull(message = "El peso es obligatorio")
+    @DecimalMin(value = "0.01", message = "El peso debe ser mayor a 0")
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal pesoKg;
+
+    @Column(length = 255)
+    private String descripcion;
+
+    @Column(name = "fecha_registro", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime fechaRegistro;
+
     public Reciclaje() {
+        this.fechaRegistro = LocalDateTime.now();
     }
 
     public Long getIdReciclaje() {
@@ -36,20 +43,20 @@ public class Reciclaje {
         this.idReciclaje = idReciclaje;
     }
 
-    public String getTipo() {
-        return tipo;
+    public SolicitudRecoleccion getSolicitud() {
+        return solicitud;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setSolicitud(SolicitudRecoleccion solicitud) {
+        this.solicitud = solicitud;
     }
 
-    public Double getPeso() {
-        return peso;
+    public BigDecimal getPesoKg() {
+        return pesoKg;
     }
 
-    public void setPeso(Double peso) {
-        this.peso = peso;
+    public void setPesoKg(BigDecimal pesoKg) {
+        this.pesoKg = pesoKg;
     }
 
     public String getDescripcion() {
@@ -60,11 +67,11 @@ public class Reciclaje {
         this.descripcion = descripcion;
     }
 
-    public SolicitudRecoleccion getSolicitud() {
-        return solicitud;
+    public LocalDateTime getFechaRegistro() {
+        return fechaRegistro;
     }
 
-    public void setSolicitud(SolicitudRecoleccion solicitud) {
-        this.solicitud = solicitud;
+    public void setFechaRegistro(LocalDateTime fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
     }
 }

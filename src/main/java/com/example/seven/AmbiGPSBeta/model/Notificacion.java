@@ -2,8 +2,8 @@ package com.example.seven.AmbiGPSBeta.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-
-import java.time.LocalDate;
+import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "notificaciones")
@@ -14,24 +14,28 @@ public class Notificacion {
     @Column(name = "id_notificacion")
     private Long idNotificacion;
 
-    @NotBlank
+    @NotNull(message = "El usuario es obligatorio")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_usuario", nullable = false)
+    private Usuario usuario;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_solicitud", nullable = true)
+    private SolicitudRecoleccion solicitud;
+
+    @NotBlank(message = "El mensaje es obligatorio")
+    @Column(nullable = false, length = 255)
     private String mensaje;
 
     @Column(nullable = false)
-    private LocalDate fecha;
+    private Boolean leido = false;
 
-    @NotBlank
-    private String estado;
-
-    @ManyToOne
-    @JoinColumn(name = "id_solicitud", nullable = false)
-    private SolicitudRecoleccion solicitud;
-
-    @ManyToOne
-    @JoinColumn(name = "id_reciclador")
-    private Reciclador reciclador;
+    @Column(name = "fecha_envio", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime fechaEnvio;
 
     public Notificacion() {
+        this.fechaEnvio = LocalDateTime.now();
+        this.leido = false;
     }
 
     public Long getIdNotificacion() {
@@ -42,28 +46,12 @@ public class Notificacion {
         this.idNotificacion = idNotificacion;
     }
 
-    public String getMensaje() {
-        return mensaje;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setMensaje(String mensaje) {
-        this.mensaje = mensaje;
-    }
-
-    public LocalDate getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public SolicitudRecoleccion getSolicitud() {
@@ -74,11 +62,27 @@ public class Notificacion {
         this.solicitud = solicitud;
     }
 
-    public Reciclador getReciclador() {
-        return reciclador;
+    public String getMensaje() {
+        return mensaje;
     }
 
-    public void setReciclador(Reciclador reciclador) {
-        this.reciclador = reciclador;
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
+    }
+
+    public Boolean getLeido() {
+        return leido;
+    }
+
+    public void setLeido(Boolean leido) {
+        this.leido = leido;
+    }
+
+    public LocalDateTime getFechaEnvio() {
+        return fechaEnvio;
+    }
+
+    public void setFechaEnvio(LocalDateTime fechaEnvio) {
+        this.fechaEnvio = fechaEnvio;
     }
 }

@@ -1,9 +1,8 @@
 package com.example.seven.AmbiGPSBeta.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-
-import java.time.LocalDate;
+import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,27 +15,32 @@ public class SolicitudRecoleccion {
     @Column(name = "id_solicitud")
     private Long idSolicitud;
 
-    @Column(name = "fecha_solicitud", nullable = false)
-    private LocalDate fechaSolicitud;
-
-    @NotBlank
-    @Column(nullable = false)
-    private String estado;
-
-    @NotBlank
-    @Column(name = "tipo_material", nullable = false)
-    private String tipoMaterial;
-
-    @Column(name = "foto_reciclaje")
-    private String fotoReciclaje;
-
-    @ManyToOne
+    @NotNull(message = "El usuario es obligatorio")
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
-    @ManyToOne
-    @JoinColumn(name = "id_reciclador")
-    private Reciclador reciclador;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_reciclador", nullable = true)
+    private Usuario reciclador;
+
+    @NotNull(message = "El tipo de material es obligatorio")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_tipo_material", nullable = false)
+    private TipoMaterial tipoMaterial;
+
+    @Column(name = "foto_reciclaje", length = 255)
+    private String fotoReciclaje;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private EstadoSolicitud estado = EstadoSolicitud.PENDIENTE;
+
+    @Column(name = "fecha_solicitud", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime fechaSolicitud;
+
+    @Column(name = "fecha_finalizacion", nullable = true)
+    private LocalDateTime fechaFinalizacion;
 
     @OneToMany(
         mappedBy = "solicitud",
@@ -52,7 +56,16 @@ public class SolicitudRecoleccion {
     )
     private QR qr;
 
+    @OneToMany(
+        mappedBy = "solicitud",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    private List<Notificacion> notificaciones = new ArrayList<>();
+
     public SolicitudRecoleccion() {
+        this.fechaSolicitud = LocalDateTime.now();
+        this.estado = EstadoSolicitud.PENDIENTE;
     }
 
     public Long getIdSolicitud() {
@@ -63,27 +76,27 @@ public class SolicitudRecoleccion {
         this.idSolicitud = idSolicitud;
     }
 
-    public LocalDate getFechaSolicitud() {
-        return fechaSolicitud;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setFechaSolicitud(LocalDate fechaSolicitud) {
-        this.fechaSolicitud = fechaSolicitud;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
-    public String getEstado() {
-        return estado;
+    public Usuario getReciclador() {
+        return reciclador;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setReciclador(Usuario reciclador) {
+        this.reciclador = reciclador;
     }
 
-    public String getTipoMaterial() {
+    public TipoMaterial getTipoMaterial() {
         return tipoMaterial;
     }
 
-    public void setTipoMaterial(String tipoMaterial) {
+    public void setTipoMaterial(TipoMaterial tipoMaterial) {
         this.tipoMaterial = tipoMaterial;
     }
 
@@ -95,20 +108,28 @@ public class SolicitudRecoleccion {
         this.fotoReciclaje = fotoReciclaje;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public EstadoSolicitud getEstado() {
+        return estado;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setEstado(EstadoSolicitud estado) {
+        this.estado = estado;
     }
 
-    public Reciclador getReciclador() {
-        return reciclador;
+    public LocalDateTime getFechaSolicitud() {
+        return fechaSolicitud;
     }
 
-    public void setReciclador(Reciclador reciclador) {
-        this.reciclador = reciclador;
+    public void setFechaSolicitud(LocalDateTime fechaSolicitud) {
+        this.fechaSolicitud = fechaSolicitud;
+    }
+
+    public LocalDateTime getFechaFinalizacion() {
+        return fechaFinalizacion;
+    }
+
+    public void setFechaFinalizacion(LocalDateTime fechaFinalizacion) {
+        this.fechaFinalizacion = fechaFinalizacion;
     }
 
     public List<Reciclaje> getReciclajes() {
@@ -125,5 +146,13 @@ public class SolicitudRecoleccion {
 
     public void setQr(QR qr) {
         this.qr = qr;
+    }
+
+    public List<Notificacion> getNotificaciones() {
+        return notificaciones;
+    }
+
+    public void setNotificaciones(List<Notificacion> notificaciones) {
+        this.notificaciones = notificaciones;
     }
 }

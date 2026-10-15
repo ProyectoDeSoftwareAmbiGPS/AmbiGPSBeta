@@ -45,12 +45,12 @@ public class ReciclajeController {
                 reciclajeService.buscarPorId(id));
     }
 
-    @GetMapping("/tipo/{tipo}")
-    public ResponseEntity<List<Reciclaje>> buscarPorTipo(
-            @PathVariable String tipo) {
+    @GetMapping("/solicitud/{idSolicitud}")
+    public ResponseEntity<List<Reciclaje>> buscarPorSolicitud(
+            @PathVariable Long idSolicitud) {
 
         return ResponseEntity.ok(
-                reciclajeService.buscarPorTipo(tipo));
+                reciclajeService.buscarPorSolicitud(idSolicitud));
     }
 
     @PutMapping("/{id}")
