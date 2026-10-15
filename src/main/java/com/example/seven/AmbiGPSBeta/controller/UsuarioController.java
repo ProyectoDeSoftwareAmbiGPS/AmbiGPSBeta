@@ -1,6 +1,7 @@
 package com.example.seven.AmbiGPSBeta.controller;
 
 import com.example.seven.AmbiGPSBeta.model.Usuario;
+import com.example.seven.AmbiGPSBeta.model.EstadoUsuario;
 import com.example.seven.AmbiGPSBeta.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -44,6 +45,33 @@ public class UsuarioController {
 
         return ResponseEntity.ok(
                 usuarioService.buscarUsuarioPorId(id)
+        );
+    }
+
+    @GetMapping("/correo/{correo}")
+    public ResponseEntity<Usuario> buscarPorCorreo(
+            @PathVariable String correo) {
+
+        return ResponseEntity.ok(
+                usuarioService.buscarPorCorreo(correo)
+        );
+    }
+
+    @GetMapping("/rol/{idRol}")
+    public ResponseEntity<List<Usuario>> buscarPorRol(
+            @PathVariable Integer idRol) {
+
+        return ResponseEntity.ok(
+                usuarioService.buscarPorRol(idRol)
+        );
+    }
+
+    @GetMapping("/estado/{estado}")
+    public ResponseEntity<List<Usuario>> buscarPorEstado(
+            @PathVariable EstadoUsuario estado) {
+
+        return ResponseEntity.ok(
+                usuarioService.buscarPorEstado(estado)
         );
     }
 

@@ -32,8 +32,8 @@ public class ReciclajeService {
                 );
     }
 
-    public List<Reciclaje> buscarPorTipo(String tipo) {
-        return reciclajeRepository.findByTipo(tipo);
+    public List<Reciclaje> buscarPorSolicitud(Long idSolicitud) {
+        return reciclajeRepository.findBySolicitudIdSolicitud(idSolicitud);
     }
 
     public Reciclaje actualizarReciclaje(
@@ -42,8 +42,7 @@ public class ReciclajeService {
 
         Reciclaje reciclaje = buscarPorId(id);
 
-        reciclaje.setTipo(datos.getTipo());
-        reciclaje.setPeso(datos.getPeso());
+        reciclaje.setPesoKg(datos.getPesoKg());
         reciclaje.setDescripcion(datos.getDescripcion());
 
         return reciclajeRepository.save(reciclaje);
