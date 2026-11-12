@@ -1,5 +1,6 @@
 package com.example.seven.AmbiGPSBeta.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -29,6 +30,7 @@ public class Municipio {
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
+    @JsonIgnore
     private List<Usuario> usuarios = new ArrayList<>();
 
     public Municipio() {

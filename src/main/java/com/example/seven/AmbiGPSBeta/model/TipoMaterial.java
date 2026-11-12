@@ -1,5 +1,6 @@
 package com.example.seven.AmbiGPSBeta.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class TipoMaterial {
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
+    @JsonIgnore
     private List<SolicitudRecoleccion> solicitudes = new ArrayList<>();
 
     public TipoMaterial() {

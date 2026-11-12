@@ -1,5 +1,6 @@
 package com.example.seven.AmbiGPSBeta.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -47,6 +48,7 @@ public class SolicitudRecoleccion {
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
+    @JsonIgnore
     private List<Reciclaje> reciclajes = new ArrayList<>();
 
     @OneToOne(
@@ -54,6 +56,7 @@ public class SolicitudRecoleccion {
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
+    @JsonIgnore
     private QR qr;
 
     @OneToMany(
@@ -61,6 +64,7 @@ public class SolicitudRecoleccion {
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
+    @JsonIgnore
     private List<Notificacion> notificaciones = new ArrayList<>();
 
     public SolicitudRecoleccion() {

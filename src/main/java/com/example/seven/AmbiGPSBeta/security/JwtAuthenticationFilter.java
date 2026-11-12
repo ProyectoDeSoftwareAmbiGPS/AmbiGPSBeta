@@ -69,18 +69,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         } catch (JwtException | IllegalArgumentException e) {
             SecurityContextHolder.clearContext();
-            response.sendError(
-                    HttpServletResponse.SC_UNAUTHORIZED,
-                    "Token JWT inválido o vencido"
-            );
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         } catch (org.springframework.security.core.userdetails
                 .UsernameNotFoundException e) {
             SecurityContextHolder.clearContext();
-            response.sendError(
-                    HttpServletResponse.SC_UNAUTHORIZED,
-                    "Usuario del token no encontrado"
-            );
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
