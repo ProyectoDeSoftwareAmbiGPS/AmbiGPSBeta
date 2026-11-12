@@ -39,12 +39,14 @@ public class SecurityConfig {
             )
 
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.GET, "/swagger-ui.html", "/swagger-ui/**",
+                    "/v3/api-docs", "/v3/api-docs/**", "/v3/api-docs.yaml").permitAll()
+
 
                 // 1. Rutas públicas: no requieren iniciar sesión
                 .requestMatchers(
                     HttpMethod.POST,
-                    "/api/auth/login",
-                    "/api/auth/registro"
+                    "/api/auth/login"
                 ).permitAll()
 
                 // 2. USUARIOS: solo el administrador administra usuarios
@@ -102,21 +104,24 @@ public class SecurityConfig {
                 ).hasRole("ADMIN")
 
                 // 8. Cualquier otra ruta requiere autenticación
+                .requestMatchers(HttpMethod.GET, "/api/historial/**", "/api/notificaciones/**", "/api/qr/**")
+                    .hasAnyRole("ADMIN", "USUARIO", "RECICLADOR")
+                .requestMatchers(HttpMethod.PATCH, "/api/notificaciones/*/marcar-leida")
+                    .hasAnyRole("ADMIN", "USUARIO", "RECICLADOR")
+                .requestMatchers("/api/historial/**", "/api/notificaciones/**")
+                    .hasRole("ADMIN")
+                .requestMatchers("/api/qr/**")
+                    .hasAnyRole("ADMIN", "RECICLADOR")
+
                 .anyRequest().authenticated()
             )
 
             .exceptionHandling(ex -> ex
                 .authenticationEntryPoint((request, response, exception) ->
-                    response.sendError(
-                        HttpServletResponse.SC_UNAUTHORIZED,
-                        "No autenticado: token ausente o inválido"
-                    )
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED)
                 )
                 .accessDeniedHandler((request, response, exception) ->
-                    response.sendError(
-                        HttpServletResponse.SC_FORBIDDEN,
-                        "No autorizado: rol sin permisos"
-                    )
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN)
                 )
             )
 

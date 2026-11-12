@@ -11,10 +11,13 @@ import java.util.List;
 @Service
 public class UsuarioService {
 
+    private final EscrituraAuditada escrituraAuditada;
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder,
+            EscrituraAuditada escrituraAuditada) {
+        this.escrituraAuditada = escrituraAuditada;
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -29,7 +32,7 @@ public class UsuarioService {
         // Codificar la contraseña antes de guardar
         usuario.setPasswordHash(passwordEncoder.encode(usuario.getPasswordHash()));
 
-        return usuarioRepository.save(usuario);
+        return escrituraAuditada.ejecutar(() -> usuarioRepository.save(usuario));
     }
 
     public List<Usuario> listarUsuarios() {
@@ -57,14 +60,17 @@ public class UsuarioService {
         usuario.setRol(datos.getRol());
         usuario.setEstado(datos.getEstado());
 
-        return usuarioRepository.save(usuario);
+        return escrituraAuditada.ejecutar(() -> usuarioRepository.save(usuario));
     }
 
     public void eliminarUsuario(Long id) {
 
         Usuario usuario = buscarUsuarioPorId(id);
 
-        usuarioRepository.delete(usuario);
+        escrituraAuditada.ejecutar(() -> {
+            usuarioRepository.delete(usuario);
+            return null;
+        });
     }
 
     public List<Usuario> buscarPorRol(Integer idRol) {

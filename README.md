@@ -98,6 +98,13 @@ curl http://localhost:8080/api/roles
 curl http://localhost:8080/api/solicitudes
 ```
 
+### Con Swagger UI
+
+Con la API iniciada, abre [Swagger UI](http://localhost:8080/swagger-ui.html).
+Ejecuta `POST /api/auth/login` con tus credenciales, copia el campo `token`
+y p?galo en **Authorize** sin el prefijo `Bearer`. Para probar una ruta,
+?brela y selecciona **Try it out** y **Execute**.
+
 ### Con Postman
 1. Importar: `AmbiGPSBeta-Postman-Collection.json`
 2. Ejecutar endpoints

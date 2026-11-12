@@ -1,5 +1,7 @@
 package com.example.seven.AmbiGPSBeta.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
@@ -64,12 +66,15 @@ public class Usuario {
     private LocalDateTime fechaRegistro;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<SolicitudRecoleccion> solicitudes = new ArrayList<>();
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Notificacion> notificaciones = new ArrayList<>();
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Historial> historial = new ArrayList<>();
 
     public Usuario() {
@@ -117,6 +122,7 @@ public class Usuario {
         this.correo = correo;
     }
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public String getPasswordHash() {
         return passwordHash;
     }

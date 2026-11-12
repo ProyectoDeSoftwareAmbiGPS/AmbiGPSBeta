@@ -1,5 +1,6 @@
 package com.example.seven.AmbiGPSBeta.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class Departamento {
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
+    @JsonIgnore
     private List<Municipio> municipios = new ArrayList<>();
 
     public Departamento() {

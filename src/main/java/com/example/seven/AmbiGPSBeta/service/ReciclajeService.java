@@ -9,14 +9,17 @@ import java.util.List;
 @Service
 public class ReciclajeService {
 
+    private final EscrituraAuditada escrituraAuditada;
     private final ReciclajeRepository reciclajeRepository;
 
-    public ReciclajeService(ReciclajeRepository reciclajeRepository) {
+    public ReciclajeService(ReciclajeRepository reciclajeRepository,
+            EscrituraAuditada escrituraAuditada) {
+        this.escrituraAuditada = escrituraAuditada;
         this.reciclajeRepository = reciclajeRepository;
     }
 
     public Reciclaje crearReciclaje(Reciclaje reciclaje) {
-        return reciclajeRepository.save(reciclaje);
+        return escrituraAuditada.ejecutar(() -> reciclajeRepository.save(reciclaje));
     }
 
     public List<Reciclaje> listarReciclajes() {
@@ -45,13 +48,16 @@ public class ReciclajeService {
         reciclaje.setPesoKg(datos.getPesoKg());
         reciclaje.setDescripcion(datos.getDescripcion());
 
-        return reciclajeRepository.save(reciclaje);
+        return escrituraAuditada.ejecutar(() -> reciclajeRepository.save(reciclaje));
     }
 
     public void eliminarReciclaje(Long id) {
 
         Reciclaje reciclaje = buscarPorId(id);
 
-        reciclajeRepository.delete(reciclaje);
+        escrituraAuditada.ejecutar(() -> {
+            reciclajeRepository.delete(reciclaje);
+            return null;
+        });
     }
 }
