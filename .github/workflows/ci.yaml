@@ -2,7 +2,7 @@ name: Pruebas AmbiGPS
 
 on:
   push:
-    branches: ["main", "pruebas-alejandro"]
+    branches: ["main", "pruebas-darnelli"]
   pull_request:
     branches: ["main"]
 
